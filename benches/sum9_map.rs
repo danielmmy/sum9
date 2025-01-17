@@ -14,5 +14,20 @@ fn sum9_map_benchmark2(c: &mut Criterion) {
     c.bench_function(&name, |b| b.iter(|| sum9_map(black_box(&data))));
 }
 
-criterion_group!(benches, sum9_map_benchmark1, sum9_map_benchmark2);
+fn sum9_map_benchmark3(c: &mut Criterion) {
+    let test_size = 1000;
+    let mut data: Vec<i32> = Vec::with_capacity(test_size);
+    for i in 0..test_size {
+        data.push(10 + i as i32);
+    }
+    let name = format!("Test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_map(black_box(&data))));
+}
+
+criterion_group!(
+    benches,
+    sum9_map_benchmark1,
+    sum9_map_benchmark2,
+    sum9_map_benchmark3
+);
 criterion_main!(benches);

@@ -14,9 +14,20 @@ fn sum9_bruteforce_benchmark2(c: &mut Criterion) {
     c.bench_function(&name, |b| b.iter(|| sum9_bruteforce(black_box(&data))));
 }
 
+fn sum9_bruteforce_benchmark3(c: &mut Criterion) {
+    let test_size = 1000;
+    let mut data: Vec<i32> = Vec::with_capacity(test_size);
+    for i in 0..test_size {
+        data.push(10 + i as i32);
+    }
+    let name = format!("Test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_bruteforce(black_box(&data))));
+}
+
 criterion_group!(
     benches,
     sum9_bruteforce_benchmark1,
-    sum9_bruteforce_benchmark2
+    sum9_bruteforce_benchmark2,
+    sum9_bruteforce_benchmark3
 );
 criterion_main!(benches);
