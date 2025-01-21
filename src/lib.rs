@@ -57,10 +57,8 @@ pub fn sum9_faster_map(numbers: &[i32]) -> Option<(usize, usize)> {
 }
 
 pub fn sum9_no_hash_map(numbers: &[i32]) -> Option<(usize, usize)> {
-    let mut map = HashMap::with_capacity_and_hasher(
-        numbers.len(),
-        BuildHasherDefault::<NoHash<i32>>::default(),
-    );
+    let mut map =
+        HashMap::with_capacity_and_hasher(numbers.len(), BuildHasherDefault::<NoHash>::default());
     for (index, i) in numbers.iter().enumerate() {
         map.insert(*i, index);
     }
