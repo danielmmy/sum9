@@ -8,23 +8,23 @@ const K: usize = 0x93d765dd;
 const MAX_BYTES: usize = 8;
 
 #[derive(Clone)]
-pub struct NoHash(usize);
+pub struct GoodMultiplierHash(usize);
 
-impl Default for NoHash {
+impl Default for GoodMultiplierHash {
     #[inline]
     fn default() -> Self {
-        NoHash(0)
+        GoodMultiplierHash(0)
     }
 }
 
-impl NoHash {
+impl GoodMultiplierHash {
     #[inline]
     fn add_to_hash(&mut self, i: usize) {
         self.0 = self.0.wrapping_add(i).wrapping_mul(K);
     }
 }
 
-impl Hasher for NoHash {
+impl Hasher for GoodMultiplierHash {
     #[inline]
     fn write(&mut self, bytes: &[u8]) {
         if bytes.len() > MAX_BYTES {

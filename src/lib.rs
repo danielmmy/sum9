@@ -1,10 +1,10 @@
-mod no_hash;
-mod no_hash_i32;
+mod good_multiplier_hash;
+mod good_multiplier_hash_i32;
 
 use std::{collections::HashMap, hash::BuildHasherDefault};
 
-use no_hash::NoHash;
-use no_hash_i32::NoHashI32;
+use good_multiplier_hash::GoodMultiplierHash;
+use good_multiplier_hash_i32::GoodMultiplierHashI32;
 use rustc_hash::FxBuildHasher;
 
 pub fn sum9_bruteforce(numbers: &[i32]) -> Option<(usize, usize)> {
@@ -56,9 +56,11 @@ pub fn sum9_faster_map(numbers: &[i32]) -> Option<(usize, usize)> {
     None
 }
 
-pub fn sum9_no_hash_map(numbers: &[i32]) -> Option<(usize, usize)> {
-    let mut map =
-        HashMap::with_capacity_and_hasher(numbers.len(), BuildHasherDefault::<NoHash>::default());
+pub fn sum9_good_multiplier_hash_map(numbers: &[i32]) -> Option<(usize, usize)> {
+    let mut map = HashMap::with_capacity_and_hasher(
+        numbers.len(),
+        BuildHasherDefault::<GoodMultiplierHash>::default(),
+    );
     for (index, i) in numbers.iter().enumerate() {
         map.insert(*i, index);
     }
@@ -76,10 +78,10 @@ pub fn sum9_no_hash_map(numbers: &[i32]) -> Option<(usize, usize)> {
     None
 }
 
-pub fn sum9_no_hash_i32_map(numbers: &[i32]) -> Option<(usize, usize)> {
+pub fn sum9_good_multiplier_hash_i32_map(numbers: &[i32]) -> Option<(usize, usize)> {
     let mut map = HashMap::with_capacity_and_hasher(
         numbers.len(),
-        BuildHasherDefault::<NoHashI32>::default(),
+        BuildHasherDefault::<GoodMultiplierHashI32>::default(),
     );
     for (index, i) in numbers.iter().enumerate() {
         map.insert(*i, index);
@@ -157,7 +159,7 @@ mod tests {
     }
 
     #[test]
-    fn sum9_no_hash_map_test() {
+    fn sum9_good_multiplier_hash_map_test() {
         // arrange
         let test_data = vec![
             (vec![1, 2, 3, 4], None),
@@ -167,7 +169,7 @@ mod tests {
 
         for (numbers, expected) in test_data {
             // act
-            let res = sum9_no_hash_map(&numbers);
+            let res = sum9_good_multiplier_hash_map(&numbers);
 
             // assert
             assert_eq!(res, expected, "Test {:?}", numbers);
@@ -175,7 +177,7 @@ mod tests {
     }
 
     #[test]
-    fn sum9_no_hash_i32_map_test() {
+    fn sum9_good_multiplier_hash_i32_map_test() {
         // arrange
         let test_data = vec![
             (vec![1, 2, 3, 4], None),
@@ -185,7 +187,7 @@ mod tests {
 
         for (numbers, expected) in test_data {
             // act
-            let res = sum9_no_hash_i32_map(&numbers);
+            let res = sum9_good_multiplier_hash_i32_map(&numbers);
 
             // assert
             assert_eq!(res, expected, "Test {:?}", numbers);

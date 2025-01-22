@@ -6,23 +6,23 @@ const K: usize = 0xf1357aea2e62a9c5;
 const K: usize = 0x93d765dd;
 
 #[derive(Clone)]
-pub struct NoHashI32(usize);
+pub struct GoodMultiplierHashI32(usize);
 
-impl Default for NoHashI32 {
+impl Default for GoodMultiplierHashI32 {
     #[inline]
     fn default() -> Self {
-        NoHashI32(0)
+        GoodMultiplierHashI32(0)
     }
 }
 
-impl NoHashI32 {
+impl GoodMultiplierHashI32 {
     #[inline]
     fn add_to_hash(&mut self, i: usize) {
         self.0 = self.0.wrapping_add(i).wrapping_mul(K);
     }
 }
 
-impl Hasher for NoHashI32 {
+impl Hasher for GoodMultiplierHashI32 {
     #[inline]
     fn write_i32(&mut self, i: i32) {
         self.add_to_hash(i as usize);
