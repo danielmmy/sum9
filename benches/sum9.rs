@@ -1,8 +1,32 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use std::hint::black_box;
+use rand::{distributions::Uniform, prelude::Distribution};
+use std::{hint::black_box, sync::OnceLock};
 use sum9::{sum9_bruteforce, sum9_faster_map, sum9_map, sum9_no_hash_i32_map, sum9_no_hash_map};
 
+const RAND_TEST_DATA_SIZE: usize = 10_000;
+
+fn rand_test_data() -> &'static Vec<i32> {
+    static INSTANCE: OnceLock<Vec<i32>> = OnceLock::new();
+
+    INSTANCE.get_or_init(|| {
+        let range: Uniform<i32> = Uniform::new(10, i32::MAX);
+        let mut rng = rand::thread_rng();
+        let mut data: Vec<i32> = Vec::with_capacity(RAND_TEST_DATA_SIZE);
+        for _ in 0..RAND_TEST_DATA_SIZE {
+            data.push(range.sample(&mut rng));
+        }
+
+        data
+    })
+}
+
 /**********************************************MAP TESTS*************************************************/
+fn sum9_map_benchmark0(c: &mut Criterion) {
+    let data = rand_test_data();
+    let name = format!("Map rand test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_map(black_box(data))));
+}
+
 fn sum9_map_benchmark1(c: &mut Criterion) {
     let data = vec![2, 7, 11, 15];
     let name = format!("Map test {:?}", data);
@@ -47,6 +71,12 @@ fn sum9_map_benchmark5(c: &mut Criterion) {
 /**********************************************END MAP TESTS*************************************************/
 
 /**********************************************FASTER MAP TESTS*************************************************/
+fn sum9_faster_map_benchmark0(c: &mut Criterion) {
+    let data = rand_test_data();
+    let name = format!("Faster Map rand test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_faster_map(black_box(data))));
+}
+
 fn sum9_faster_map_benchmark1(c: &mut Criterion) {
     let data = vec![2, 7, 11, 15];
     let name = format!("Faster Map test {:?}", data);
@@ -91,6 +121,12 @@ fn sum9_faster_map_benchmark5(c: &mut Criterion) {
 /**********************************************END FASTER MAP TESTS*************************************************/
 
 /**********************************************NO HASH MAP TESTS*************************************************/
+fn sum9_no_hash_map_benchmark0(c: &mut Criterion) {
+    let data = rand_test_data();
+    let name = format!("No Hash Map rand test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_no_hash_map(black_box(data))));
+}
+
 fn sum9_no_hash_map_benchmark1(c: &mut Criterion) {
     let data = vec![2, 7, 11, 15];
     let name = format!("No Hash Map test {:?}", data);
@@ -135,6 +171,12 @@ fn sum9_no_hash_map_benchmark5(c: &mut Criterion) {
 /**********************************************END NO HASH MAP TESTS*************************************************/
 
 /**********************************************NO HASH I32 MAP TESTS*************************************************/
+fn sum9_no_hash_i32_map_benchmark0(c: &mut Criterion) {
+    let data = rand_test_data();
+    let name = format!("No Hash I32 Map rand test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_no_hash_i32_map(black_box(data))));
+}
+
 fn sum9_no_hash_i32_map_benchmark1(c: &mut Criterion) {
     let data = vec![2, 7, 11, 15];
     let name = format!("No Hash I32 Map  {:?}", data);
@@ -179,6 +221,12 @@ fn sum9_no_hash_i32_map_benchmark5(c: &mut Criterion) {
 /**********************************************END NO HASH I32 MAP TESTS*************************************************/
 
 /**********************************************BRUTEFORCE TESTS*************************************************/
+fn sum9_bruteforce_benchmark0(c: &mut Criterion) {
+    let data = rand_test_data();
+    let name = format!("Bruteforce rand test size {}", data.len());
+    c.bench_function(&name, |b| b.iter(|| sum9_bruteforce(black_box(data))));
+}
+
 fn sum9_bruteforce_benchmark1(c: &mut Criterion) {
     let data = vec![2, 7, 11, 15];
     let name = format!("Bruteforce test {:?}", data);
@@ -224,6 +272,11 @@ fn sum9_bruteforce_benchmark5(c: &mut Criterion) {
 
 criterion_group!(
     benches,
+    sum9_map_benchmark0,
+    sum9_faster_map_benchmark0,
+    sum9_no_hash_map_benchmark0,
+    sum9_no_hash_i32_map_benchmark0,
+    sum9_bruteforce_benchmark0,
     sum9_map_benchmark1,
     sum9_faster_map_benchmark1,
     sum9_no_hash_map_benchmark1,
