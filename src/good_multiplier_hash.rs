@@ -8,19 +8,21 @@ const K: usize = 0x93d765dd;
 const MAX_BYTES: usize = 8;
 
 #[derive(Clone)]
-pub struct GoodMultiplierHash(usize);
+pub struct GoodMultiplierHash {
+    hash: usize,
+}
 
 impl Default for GoodMultiplierHash {
     #[inline]
     fn default() -> Self {
-        GoodMultiplierHash(0)
+        GoodMultiplierHash { hash: 0 }
     }
 }
 
 impl GoodMultiplierHash {
     #[inline]
     fn add_to_hash(&mut self, i: usize) {
-        self.0 = self.0.wrapping_add(i).wrapping_mul(K);
+        self.hash = self.hash.wrapping_add(i).wrapping_mul(K);
     }
 }
 
@@ -74,6 +76,6 @@ impl Hasher for GoodMultiplierHash {
 
     #[inline]
     fn finish(&self) -> u64 {
-        self.0 as u64
+        self.hash as u64
     }
 }

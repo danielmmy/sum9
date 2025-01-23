@@ -6,19 +6,21 @@ const K: usize = 0xf1357aea2e62a9c5;
 const K: usize = 0x93d765dd;
 
 #[derive(Clone)]
-pub struct GoodMultiplierHashI32(usize);
+pub struct GoodMultiplierHashI32 {
+    hash: usize,
+}
 
 impl Default for GoodMultiplierHashI32 {
     #[inline]
     fn default() -> Self {
-        GoodMultiplierHashI32(0)
+        GoodMultiplierHashI32 { hash: 0 }
     }
 }
 
 impl GoodMultiplierHashI32 {
     #[inline]
     fn add_to_hash(&mut self, i: usize) {
-        self.0 = self.0.wrapping_add(i).wrapping_mul(K);
+        self.hash = self.hash.wrapping_add(i).wrapping_mul(K);
     }
 }
 
@@ -30,7 +32,7 @@ impl Hasher for GoodMultiplierHashI32 {
 
     #[inline]
     fn finish(&self) -> u64 {
-        self.0 as u64
+        self.hash as u64
     }
 
     #[inline]
